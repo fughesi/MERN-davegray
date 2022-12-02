@@ -1,0 +1,5 @@
+20221202	06:16:52	26439597-3624-4bef-adf1-dde94c5b20c6	Error: data and salt arguments required	POST	/users?username=cam&password=123&roles=[{type:%22penis%22,default:%22employee%22}]&active=true	undefined
+20221202	06:29:56	396de8bd-7ba0-4756-9ff4-c50ea43920bb	SyntaxError: Expected double-quoted property name in JSON at position 53	POST	/users	undefined
+20221202	06:41:19	75da928b-21eb-4dcd-860e-64ecc930ce54	SyntaxError: Expected property name or '}' in JSON at position 5	PATCH	/users	undefined
+20221202	06:41:51	cd6a874b-73cb-4523-b7ec-9008957f1cf1	SyntaxError: Expected double-quoted property name in JSON at position 136	PATCH	/users	undefined
+20221202	06:42:15	555ffc23-60a8-4c8e-b3e8-6c438460698e	CastError: Cast to ObjectId failed for value "6389e05c79618c710e8d79052" (type string) at path "_id" for model "User"	PATCH	/users	undefined
