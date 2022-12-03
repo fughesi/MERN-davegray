@@ -3,3 +3,5 @@
 20221202	06:41:19	75da928b-21eb-4dcd-860e-64ecc930ce54	SyntaxError: Expected property name or '}' in JSON at position 5	PATCH	/users	undefined
 20221202	06:41:51	cd6a874b-73cb-4523-b7ec-9008957f1cf1	SyntaxError: Expected double-quoted property name in JSON at position 136	PATCH	/users	undefined
 20221202	06:42:15	555ffc23-60a8-4c8e-b3e8-6c438460698e	CastError: Cast to ObjectId failed for value "6389e05c79618c710e8d79052" (type string) at path "_id" for model "User"	PATCH	/users	undefined
+20221203	12:22:07	ae16f59a-b426-44df-8021-9feb24dac7c3	ValidationError: Note validation failed: user: Cast to ObjectId failed for value "cam" (type string) at path "user" because of "BSONTypeError"	POST	/notes	undefined
+20221203	12:23:04	ed1351e4-1db3-4381-aee6-17c27493f1a1	ValidationError: Note validation failed: user: Cast to ObjectId failed for value "cam" (type string) at path "user" because of "BSONTypeError"	POST	/notes	undefined
