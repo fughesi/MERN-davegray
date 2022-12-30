@@ -66,8 +66,6 @@ const EditUserForm = ({ user }) => {
     await deleteUser({ id: user.id });
   };
 
-  // maybe??########################
-
   const options = Object.values(ROLES).map((role) => {
     return (
       <option key={role} value={role}>
@@ -75,8 +73,6 @@ const EditUserForm = ({ user }) => {
       </option>
     );
   });
-
-  // maybe??########################
 
   let canSave;
   if (password) {

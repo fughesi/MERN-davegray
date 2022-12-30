@@ -1,15 +1,10 @@
 import { useState, useEffect } from "react";
-import { useUpdateUserMutation, useDeleteUserMutation } from "./usersApiSlice";
 import { useUpdateNoteMutation, useDeleteNoteMutation } from "./notesApiSlice";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { ROLES } from "../../config/roles";
 
 const EditNoteForm = ({ note, users }) => {
-  // const USER_REGEX = /^[A-z]{3,20}$/;
-  // const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
-
   const [updateNote, { isLoading, isSuccess, isError, error }] =
     useUpdateNoteMutation();
 
@@ -20,94 +15,70 @@ const EditNoteForm = ({ note, users }) => {
 
   const navigate = useNavigate();
 
-  const [notes, setNotes] = useState(notes.body);
-  const [validUsername, setValidUsername] = useState(false);
-  const [password, setPassword] = useState("");
-  const [validPassword, setValidPassword] = useState(false);
-  const [roles, setRoles] = useState(user.roles);
-  const [active, setActive] = useState(user.active);
-
-  useEffect(() => {
-    setValidUsername(USER_REGEX.test(username));
-  }, [username]);
-  useEffect(() => {
-    setValidPassword(PWD_REGEX.test(password));
-  }, [password]);
+  const [title, setTitle] = useState(note.title);
+  const [text, setText] = useState(note.text);
+  const [completed, setCompleted] = useState(note.completed);
+  const [userId, setUserId] = useState(note.user);
 
   useEffect(() => {
     if (isSuccess || isDelSuccess) {
-      setUsername("");
-      setPassword("");
-      setRoles([]);
-      navigate("/dash/users");
+      setTitle("");
+      setText("");
+      setUserId("");
+      navigate("/dash/notes");
     }
   }, [isSuccess, isDelSuccess, navigate]);
 
-  const onUsernameChanged = (e) => setUsername(e.target.value);
-  const onPasswordChanged = (e) => setPassword(e.target.value);
+  const canSave = [title, text, userId].every(Boolean) && !isLoading;
 
-  const onRolesChanged = (e) => {
-    const values = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setRoles(values);
-  };
-
-  const onActiveChanged = () => setActive((prev) => !prev);
-  const onSaveUserClicked = async (e) => {
-    if (password) {
-      await updateUser({ id: user.id, username, password, roles, active });
-    } else {
-      await updateUser({ id: user.id, username, roles, active });
+  const onSaveNoteClicked = async (e) => {
+    if (canSave) {
+      await updateNote({ id: note.id, user: userId, title, text, completed });
     }
   };
 
-  const onDeleteUserClicked = async () => {
-    await deleteUser({ id: user.id });
-  };
+  const created = new Date(note.createdAt).toLocaleString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  });
+  const updated = new Date(note.updatedAt).toLocaleString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  });
 
-  // maybe??########################
-
-  const options = Object.values(ROLES).map((role) => {
+  const options = users.map((i) => {
     return (
-      <option key={role} value={role}>
-        {role}
+      <option key={i.id} value={i.id}>
+        {i.username}
       </option>
     );
   });
 
-  // maybe??########################
-
-  let canSave;
-  if (password) {
-    canSave =
-      [roles.length, validUsername, validPassword].every(Boolean) && !isLoading;
-  } else {
-    canSave = [roles.length, validUsername].every(Boolean) && !isLoading;
-  }
-
-  const errClass = isError || isDelError ? "errmsg" : "offscreen";
-  const validUserClass = !validUsername ? "form__input--incomplete" : "";
-  // const validPwdClass = !validPassword ? "form__input--incomplete" : ""; <----makes red line
-  const validRolesClass = !Boolean(roles.length)
-    ? "form__input--incomplete"
-    : "";
-  const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
-
   const content = (
     <>
-      <p className={errClass}>{errContent}</p>
+      {(isError || isDelError) && (
+        <p className="errMsg">
+          {(error?.data?.message || delerror?.data?.message) ?? ""}
+        </p>
+      )}
 
       <form onSubmit={(e) => e.preventDefault()} className="form">
         <div className="form__title-row">
-          <h2>Edit User</h2>
+          <h2>Edit Note #{note.ticket}</h2>
 
           <div className="form__action-buttons">
             <button
               className="icon-button"
               title="Save"
-              onClick={onSaveUserClicked}
+              onClick={onSaveNoteClicked}
               disabled={!canSave}
             >
               <FontAwesomeIcon icon={faSave} />
@@ -116,71 +87,84 @@ const EditNoteForm = ({ note, users }) => {
             <button
               className="icon-button"
               title="Delete"
-              onClick={onDeleteUserClicked}
+              onClick={async (e) => await deleteNote({ id: note.id })}
             >
               <FontAwesomeIcon icon={faTrashCan} />
             </button>
           </div>
         </div>
 
-        <label htmlFor="username" className="form__label">
-          Username: <span className="nowrap">[3-20 letters]</span>
+        <label htmlFor="note-title" className="form__label">
+          Title:
         </label>
 
         <input
           type="text"
-          className={`form__input ${validUserClass}`}
-          id="username"
-          name="username"
+          className={`form__input ${!title ? "form__input--incompleted" : ""}`}
+          id="note-title"
+          name="title"
           autoComplete="off"
-          value={username}
-          onChange={onUsernameChanged}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
 
-        <label htmlFor="password" className="form__label">
-          Password: <span className="nowrap">[empty = no change]</span>
-          <span className="nowrap">[4-12 chars incl. !@#$%]</span>
+        <label htmlFor="note-text" className="form__label">
+          Text:
         </label>
 
         <input
-          type="password"
-          className={`form__input `}
-          id="password"
-          name="password"
-          value={password}
-          onChange={onPasswordChanged}
+          type="text"
+          className={`form__input ${!text ? "form__input--incompleted" : ""}`}
+          id="note-text"
+          name="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
         />
 
-        <label
-          htmlFor="user-active"
-          className="form__label form__checkbox-container"
-        >
-          ACTIVE:
-          <input
-            type="checkbox"
-            className="form__checkbox"
-            id="user-active"
-            name="user-active"
-            checked={active}
-            onChange={onActiveChanged}
-          />
-        </label>
+        <div className="form__row">
+          <div className="form__divider">
+            <label
+              htmlFor="note-completed"
+              className="form__label form__checkbox-container"
+            >
+              COMPLETED:
+              <input
+                type="checkbox"
+                className="form__checkbox"
+                id="note-completed"
+                name="completed"
+                checked={completed}
+                onChange={setCompleted((i) => !i)}
+              />
+            </label>
 
-        <label htmlFor="roles" className="form__label">
-          ASSIGNED ROLES:
-        </label>
-
-        <select
-          name="roles"
-          id="roles"
-          className={`form__select ${validRolesClass}`}
-          multiple={true}
-          size="3"
-          value={roles}
-          onChange={onRolesChanged}
-        >
-          {options}
-        </select>
+            <label
+              htmlFor="note-username"
+              className="form__label form__checkbox-container"
+            >
+              ASSIGNED TO:
+            </label>
+            <select
+              name="username"
+              id="note-username"
+              className="form__select"
+              value={userId}
+              onChange={setUserId((e) => e.target.value)}
+            >
+              {options}
+            </select>
+          </div>
+          <div className="form__divider">
+            <p className="form__created">
+              Created: <br />
+              {created}
+            </p>
+            <p className="form__updated">
+              Updated: <br />
+              {updated}
+            </p>
+          </div>
+        </div>
       </form>
     </>
   );
