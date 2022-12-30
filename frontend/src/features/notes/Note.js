@@ -3,11 +3,12 @@ import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
 import { useSelector } from "react-redux";
-import { selectNotesById } from "./notesApiSlice";
+import { selectNoteById } from "./notesApiSlice";
+// import { selectAllNotes } from "./notesApiSlice";
 
 const Note = ({ noteId }) => {
-  const note = useSelector((state) => selectNotesById(state, noteId));
-
+  const note = useSelector((state) => selectNoteById(state, noteId));
+  // const note = useSelector((state) => selectAllNotes(state, noteId));
   const navigate = useNavigate();
 
   if (note) {
@@ -19,8 +20,8 @@ const Note = ({ noteId }) => {
       day: "numeric",
       month: "long",
     });
-    const handleEdit = () => navigate(`/dash/notes/${noteId}`);
 
+    console.log(note);
     return (
       <tr className="table__row">
         <td className="table__cell note__status">
@@ -36,7 +37,10 @@ const Note = ({ noteId }) => {
         <td className="table__cell note__username">{note.username}</td>
 
         <td className="table__cell">
-          <button className="icon-button table__button" onClick={handleEdit}>
+          <button
+            className="icon-button table__button"
+            onClick={() => navigate(`/dash/notes/${noteId}`)}
+          >
             <FontAwesomeIcon icon={faPenToSquare} />
           </button>
         </td>

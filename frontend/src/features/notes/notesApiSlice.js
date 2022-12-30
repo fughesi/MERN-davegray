@@ -80,8 +80,8 @@ const selectNotesData = createSelector(
 
 // renaming getSelectors results
 export const {
-  selectAll: selectNotes,
-  selectById: selectNotesById,
+  selectAll: selectAllNotes,
+  selectById: selectNoteById,
   selectIds: selectNoteIds,
 } = notesAdapter.getSelectors(
   (state) => selectNotesData(state) ?? initialState

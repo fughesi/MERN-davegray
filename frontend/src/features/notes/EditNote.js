@@ -1,13 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectNotesById } from "./notesApiSlice";
+import { selectNoteById } from "./notesApiSlice";
 import { selectAllUsers } from "../users/usersApiSlice";
 import EditNoteForm from "./EditNoteForm";
 
 const EditNote = () => {
   const { id } = useParams();
 
-  const note = useSelector((state) => selectNotesById(state, id));
+  const note = useSelector((state) => selectNoteById(state, id));
 
   const users = useSelector(selectAllUsers);
 

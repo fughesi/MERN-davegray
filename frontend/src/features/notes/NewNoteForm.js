@@ -10,7 +10,7 @@ const NewNoteForm = ({ users }) => {
 
   const navigate = useNavigate();
 
-  const [userId, setUserId] = useState(users[0].id);
+  const [userId, setUserId] = useState(users.id);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
 
@@ -62,7 +62,7 @@ const NewNoteForm = ({ users }) => {
           id="title"
           name="title"
           type="text"
-          autocomplete="off"
+          autoComplete="off"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
