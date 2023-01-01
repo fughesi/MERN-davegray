@@ -45,6 +45,7 @@ const EditNoteForm = ({ note, users }) => {
     minute: "numeric",
     second: "numeric",
   });
+
   const updated = new Date(note.updatedAt).toLocaleString("en-US", {
     day: "numeric",
     month: "long",
