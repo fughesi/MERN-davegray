@@ -31,13 +31,13 @@ const login = asyncHandler(async (req, res) => {
       },
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "1m" }
+    { expiresIn: "10s" }
   );
 
   const refreshToken = jwt.sign(
     { username: foundUser.username },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "1d" }
+    { expiresIn: "20s" }
   );
 
   res.cookie("jwt", refreshToken, {
@@ -64,7 +64,7 @@ const refresh = (req, res) => {
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET,
     asyncHandler(async (err, decoded) => {
-      if (err) return User.status(403).json({ message: "Forbidden" });
+      if (err) return res.status(403).json({ message: "Forbidden" });
 
       const foundUser = await User.findOne({
         username: decoded.username,
@@ -80,7 +80,7 @@ const refresh = (req, res) => {
           },
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "1m" }
+        { expiresIn: "20s" }
       );
       res.json({ accessToken });
     })
