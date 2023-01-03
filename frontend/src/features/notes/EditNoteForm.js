@@ -15,8 +15,8 @@ const EditNoteForm = ({ note, users }) => {
 
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState(note.title);
   const [text, setText] = useState(note.text);
+  const [title, setTitle] = useState(note.title);
   const [completed, setCompleted] = useState(note.completed);
   const [userId, setUserId] = useState(note.user);
 
@@ -150,7 +150,7 @@ const EditNoteForm = ({ note, users }) => {
               id="note-username"
               className="form__select"
               value={userId}
-              onChange={setUserId((e) => e.target.value)}
+              onChange={(e) => setUserId(e.target.value)}
             >
               {options}
             </select>

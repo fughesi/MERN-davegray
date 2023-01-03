@@ -72,7 +72,7 @@ const updateNote = asyncHandler(async (req, res) => {
   const note = await Note.findById(id).exec();
 
   if (!note) {
-    return res.status(400).json({ messag: "Note not found" });
+    return res.status(400).json({ message: "Note not found" });
   }
 
   //check for duplicate title

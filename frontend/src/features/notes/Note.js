@@ -21,7 +21,6 @@ const Note = ({ noteId }) => {
       month: "long",
     });
 
-    console.log(note);
     return (
       <tr className="table__row">
         <td className="table__cell note__status">
