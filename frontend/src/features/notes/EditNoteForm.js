@@ -3,8 +3,11 @@ import { useUpdateNoteMutation, useDeleteNoteMutation } from "./notesApiSlice";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import useAuth from "../../hooks/useAuth";
 
 const EditNoteForm = ({ note, users }) => {
+  const { isManager, isAdmin } = useAuth();
+
   const [updateNote, { isLoading, isSuccess, isError, error }] =
     useUpdateNoteMutation();
 
@@ -63,6 +66,19 @@ const EditNoteForm = ({ note, users }) => {
     );
   });
 
+  let deleteButton = null;
+  if (isManager || isAdmin) {
+    deleteButton = (
+      <button
+        className="icon-button"
+        title="Delete"
+        onClick={async (e) => await deleteNote({ id: note.id })}
+      >
+        <FontAwesomeIcon icon={faTrashCan} />
+      </button>
+    );
+  }
+
   const content = (
     <>
       {(isError || isDelError) && (
@@ -85,13 +101,7 @@ const EditNoteForm = ({ note, users }) => {
               <FontAwesomeIcon icon={faSave} />
             </button>
 
-            <button
-              className="icon-button"
-              title="Delete"
-              onClick={async (e) => await deleteNote({ id: note.id })}
-            >
-              <FontAwesomeIcon icon={faTrashCan} />
-            </button>
+            {deleteButton}
           </div>
         </div>
 

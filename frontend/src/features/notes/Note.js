@@ -4,11 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 import { selectNoteById } from "./notesApiSlice";
-// import { selectAllNotes } from "./notesApiSlice";
 
 const Note = ({ noteId }) => {
   const note = useSelector((state) => selectNoteById(state, noteId));
-  // const note = useSelector((state) => selectAllNotes(state, noteId));
+
   const navigate = useNavigate();
 
   if (note) {

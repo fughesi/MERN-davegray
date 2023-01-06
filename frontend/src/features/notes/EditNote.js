@@ -11,7 +11,7 @@ const EditNote = () => {
 
   const users = useSelector(selectAllUsers);
 
-  // console.log(note);
+  console.log(note, users);
   const content =
     note && users ? (
       <EditNoteForm note={note} users={users} />

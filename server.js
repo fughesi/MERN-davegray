@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("express-async-errors");
 const errorHandler = require("./middleware/errorHandler");
 const connectDB = require("./config/dbConn");
 const mongoose = require("mongoose");
